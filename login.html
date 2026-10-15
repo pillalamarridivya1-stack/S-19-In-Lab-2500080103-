@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Page</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="box">
+        <h2>Login Page</h2>
+
+        <input type="text" id="user"
+               placeholder="Username"><br><br>
+
+        <input type="password" id="pass"
+               placeholder="Password"><br><br>
+
+        
+        <button onclick="login()">Login</button>
+        <button onclick="logout()">Logout</button>
+
+        <p id="msg"></p>
+    </div>
+
+    <script>
+        function logout() {
+            localStorage.removeItem("username");
+            localStorage.removeItem("password");
+
+            document.getElementById("user").value = "";
+            document.getElementById("pass").value = "";
+
+             document.getElementById("msg").innerHTML =
+                   "Logged Out Successfully";
+             }
+
+        function login() {
+            let u = document.getElementById("user").value;
+            let p = document.getElementById("pass").value;
+
+            if (u == localStorage.getItem("username") &&
+                p == localStorage.getItem("password")) {
+                document.getElementById("msg").innerHTML =
+                    "Login Successful";
+            } else {
+                document.getElementById("msg").innerHTML =
+                    "Invalid Username or Password";
+            }
+        }
+    </script>
+
+</body>
+</html>

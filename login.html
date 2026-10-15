@@ -1,53 +1,92 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Login Page</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Login Portal</title>
     <link rel="stylesheet" href="style.css">
+
+    
 </head>
+
 <body>
 
-    <div class="box">
-        <h2>Login Page</h2>
+    <!-- Login Section -->
+    <div class="card" id="loginBox">
+        <h2>User Login</h2>
+        <p>Enter your details to continue</p>
 
-        <input type="text" id="user"
-               placeholder="Username"><br><br>
+        <form id="loginForm">
+            <input type="text" id="uname"
+                   placeholder="Enter Username" required>
 
-        <input type="password" id="pass"
-               placeholder="Password"><br><br>
+            <input type="password" id="pwd"
+                   placeholder="Enter Password" required>
 
-        
-        <button onclick="login()">Login</button>
-        <button onclick="logout()">Logout</button>
+            <button type="submit">Log In</button>
+        </form>
 
         <p id="msg"></p>
     </div>
 
+    <!-- Dashboard Section -->
+    <div class="card hide" id="homeBox">
+        <h2>My Dashboard</h2>
+        <p>Welcome! You are logged in.</p>
+
+        <h3>Hello, <span id="userDisplay"></span></h3>
+
+        <button class="logout" onclick="logoutUser()">
+            Log Out
+        </button>
+    </div>
+
     <script>
-        function logout() {
-            localStorage.removeItem("username");
-            localStorage.removeItem("password");
+        const loginBox = document.getElementById("loginBox");
+        const homeBox = document.getElementById("homeBox");
 
-            document.getElementById("user").value = "";
-            document.getElementById("pass").value = "";
+        function displayDashboard(username) {
+            loginBox.classList.add("hide");
+            homeBox.classList.remove("hide");
+            document.getElementById("userDisplay").textContent = username;
+        }
 
-             document.getElementById("msg").innerHTML =
-                   "Logged Out Successfully";
-             }
+        function checkLogin() {
+            let username = sessionStorage.getItem("activeUser");
 
-        function login() {
-            let u = document.getElementById("user").value;
-            let p = document.getElementById("pass").value;
-
-            if (u == localStorage.getItem("username") &&
-                p == localStorage.getItem("password")) {
-                document.getElementById("msg").innerHTML =
-                    "Login Successful";
+            if (username) {
+                displayDashboard(username);
             } else {
-                document.getElementById("msg").innerHTML =
-                    "Invalid Username or Password";
+                loginBox.classList.remove("hide");
+                homeBox.classList.add("hide");
             }
         }
+
+        document.getElementById("loginForm")
+            .addEventListener("submit", function(event) {
+                event.preventDefault();
+
+                let username = document.getElementById("uname").value.trim();
+
+                if (username === "") return;
+
+                // Save user details
+                localStorage.setItem("savedUsername", username);
+
+                // Create login session
+                sessionStorage.setItem("activeUser", username);
+
+                document.getElementById("msg").textContent = "";
+                displayDashboard(username);
+            });
+
+        function logoutUser() {
+            sessionStorage.removeItem("activeUser");
+            document.getElementById("loginForm").reset();
+            checkLogin();
+        }
+
+        checkLogin();
     </script>
 
 </body>
